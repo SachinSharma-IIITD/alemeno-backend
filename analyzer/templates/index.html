@@ -1,0 +1,91 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urine Strip Analyzer</title>
+</head>
+<body>
+    <h1>Upload Urine Strip Image</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="image" name="image" accept="image/*" required>
+        <button type="submit">Upload</button>
+    </form>
+    <h2>Response:</h2>
+    <pre id="result"></pre>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var formData = new FormData();
+            formData.append('image', document.getElementById('image').files[0]);
+
+            fetch('/api/analyze/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                var resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+<!-- analyzer/templates/index.html -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urine Strip Analyzer</title>
+</head>
+<body>
+    <h1>Upload Urine Strip Image</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="image" name="image" accept="image/*" required>
+        <button type="submit">Upload</button>
+    </form>
+    <h2>Detected Colors:</h2>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var formData = new FormData();
+            formData.append('image', document.getElementById('image').files[0]);
+
+            fetch('/api/analyze/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display colors and their RGB values
+                var resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = '';
+
+                data.color_values.forEach((colorValue, index) => {
+                    var colorDiv = document.createElement('div');
+                    colorDiv.style.backgroundColor = `rgb(${data.colors[index][0]}, ${data.colors[index][1]}, ${data.colors[index][2]})`;
+                    colorDiv.style.width = '100px';
+                    colorDiv.style.height = '20px';
+                    colorDiv.style.marginBottom = '5px';
+                    colorDiv.innerHTML = colorValue;
+                    resultDiv.appendChild(colorDiv);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html> -->
